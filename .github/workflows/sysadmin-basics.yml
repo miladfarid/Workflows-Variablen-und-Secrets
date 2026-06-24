@@ -6,6 +6,11 @@ on:
       - main
   workflow_dispatch:
 
+env:
+  APP_NAME: "CloudApp-DCI"
+  TARGET_ENV: "development"
+  REGION: "eu-west-1"
+
 jobs:
   system-info:
     runs-on: ubuntu-latest
@@ -41,6 +46,30 @@ jobs:
           echo "=== Verzeichnisinhalt ===" >> reports/system-report.txt
           ls -la >> reports/system-report.txt
 
-      - name: Report-Inhalt anzeigen
-        run: cat reports/system-report.txt
+      - name: Umgebungsvariablen protokollieren
+        env:
+          DEPLOY_VERSION: "v1.0.3"
+        run: |
+          echo "=== Deployment-Log ==="
+          echo "Anwendung   : $APP_NAME"
+          echo "Zielsystem  : $TARGET_ENV"
+          echo "Region      : $REGION"
+          echo "Version     : $DEPLOY_VERSION"
 
+      - name: Runtime-Info speichern
+        env:
+          DEPLOY_VERSION: "v1.0.3"
+        run: |
+          echo "=== RUNTIME INFO ===" > reports/runtime-info.txt
+          echo "APP_NAME    : $APP_NAME" >> reports/runtime-info.txt
+          echo "TARGET_ENV  : $TARGET_ENV" >> reports/runtime-info.txt
+          echo "REGION      : $REGION" >> reports/runtime-info.txt
+          echo "VERSION     : $DEPLOY_VERSION" >> reports/runtime-info.txt
+          echo "Datum       : $(date)" >> reports/runtime-info.txt
+
+      - name: Report-Inhalt anzeigen
+        run: |
+          echo "--- system-report.txt ---"
+          cat reports/system-report.txt
+          echo "--- runtime-info.txt ---"
+          cat reports/runtime-info.txt
