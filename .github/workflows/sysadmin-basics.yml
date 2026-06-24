@@ -123,7 +123,7 @@ jobs:
             echo "Ausloeser: Push auf Branch"
           fi
 
-          CONFIG_FILE="config/${ENV_NAME}.env"
+          CONFIG_FILE="config/${ENV_NAME}.cfg"
           echo "Gewaehlte Umgebung  : $ENV_NAME"
           echo "Konfigurationsdatei : $CONFIG_FILE"
           echo "GitHub Environment  : ${{ job.environment }}"
