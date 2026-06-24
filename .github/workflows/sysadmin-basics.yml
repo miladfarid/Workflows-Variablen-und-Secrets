@@ -5,6 +5,15 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Zielumgebung auswaehlen'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - prod
 
 env:
   APP_NAME: "CloudApp-DCI"
@@ -23,13 +32,10 @@ jobs:
         run: |
           echo "=== Aktuelles Datum ==="
           date
-
           echo "=== Kernel- und Systeminfos ==="
           uname -a
-
           echo "=== Aktuelles Verzeichnis ==="
           pwd
-
           echo "=== Verzeichnisinhalt ==="
           ls -la
 
@@ -80,19 +86,16 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_TARGET }}
         run: |
           echo "=== Secret-Pruefung ==="
-
           if [ -n "$API_TOKEN" ]; then
             echo "CLOUD_API_TOKEN : vorhanden ✅"
           else
             echo "CLOUD_API_TOKEN : fehlt ❌"
           fi
-
           if [ -n "$SSH_HOST" ]; then
             echo "SSH_TARGET      : vorhanden ✅"
           else
             echo "SSH_TARGET      : fehlt ❌"
           fi
-
           echo "=== Simulation: Verbindung wird aufgebaut ==="
           echo "Verbinde mit Zielserver... (simuliert)"
           echo "API-Authentifizierung... (simuliert)"
@@ -102,10 +105,15 @@ jobs:
         run: |
           echo "=== Umgebungsauswahl ==="
 
-          if [ "${{ github.ref_name }}" = "main" ]; then
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            ENV_NAME="${{ github.event.inputs.environment }}"
+            echo "Ausloeser: Manuell (workflow_dispatch)"
+          elif [ "${{ github.ref_name }}" = "main" ]; then
             ENV_NAME="prod"
+            echo "Ausloeser: Push auf main"
           else
             ENV_NAME="dev"
+            echo "Ausloeser: Push auf Branch"
           fi
 
           CONFIG_FILE="config/${ENV_NAME}.env"
