@@ -98,6 +98,29 @@ jobs:
           echo "API-Authentifizierung... (simuliert)"
           echo "Vorgang abgeschlossen."
 
+      - name: Umgebung bestimmen und Konfiguration laden
+        run: |
+          echo "=== Umgebungsauswahl ==="
+
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            ENV_NAME="prod"
+          else
+            ENV_NAME="dev"
+          fi
+
+          CONFIG_FILE="config/${ENV_NAME}.env"
+          echo "Gewaehlte Umgebung  : $ENV_NAME"
+          echo "Konfigurationsdatei : $CONFIG_FILE"
+
+          echo "=== Geladene Konfiguration ==="
+          cat "$CONFIG_FILE"
+
+          echo ""
+          echo "=== Konfigurationswerte ==="
+          while IFS='=' read -r KEY VALUE; do
+            echo "$KEY = $VALUE"
+          done < "$CONFIG_FILE"
+
       - name: Artefakte hochladen
         uses: actions/upload-artifact@v4
         with:
