@@ -1,0 +1,46 @@
+name: Sysadmin Basics Workflow
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  system-info:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Systeminfos anzeigen
+        run: |
+          echo "=== Aktuelles Datum ==="
+          date
+
+          echo "=== Kernel- und Systeminfos ==="
+          uname -a
+
+          echo "=== Aktuelles Verzeichnis ==="
+          pwd
+
+          echo "=== Verzeichnisinhalt ==="
+          ls -la
+
+      - name: Report-Verzeichnis erstellen
+        run: mkdir -p reports
+
+      - name: System-Report erstellen
+        run: |
+          echo "=== SYSTEM REPORT ===" > reports/system-report.txt
+          echo "Datum: $(date)" >> reports/system-report.txt
+          echo "Runner: $RUNNER_NAME" >> reports/system-report.txt
+          echo "Hostname: $(hostname)" >> reports/system-report.txt
+          echo "" >> reports/system-report.txt
+          echo "=== Verzeichnisinhalt ===" >> reports/system-report.txt
+          ls -la >> reports/system-report.txt
+
+      - name: Report-Inhalt anzeigen
+        run: cat reports/system-report.txt
+
