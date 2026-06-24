@@ -127,3 +127,46 @@ MAINTENANCE_MODE=false
 10-Artefakte hochladen
 
 
+---
+
+## Erweiterungsaufgabe 3: Typische Fehlerquellen
+
+### Fehlerfall 1: Secret fehlt
+
+**Symptom:**
+
+CLOUD_API_TOKEN : fehlt ❌
+
+**Ursache:** Secret wurde gelöscht oder umbenannt.
+
+**Lösung:** Secret unter Settings → Secrets → Actions neu anlegen.
+
+**Erkennung im Log:** Der Workflow läuft weiter, zeigt aber `fehlt ❌`.
+Kein Absturz, da der Fehler abgefangen wird.
+
+---
+
+### Fehlerfall 2: Konfigurationsdatei nicht gefunden
+
+**Symptom:**
+
+cat: config/prod.cfg: No such file or directory
+
+Error: Process completed with exit code 1.
+
+**Ursache:** Falsche Dateiendung `.cfg` statt `.env` im Workflow.
+
+**Lösung:** Dateiname im Workflow korrigieren auf `${ENV_NAME}.env`.
+
+**Erkennung im Log:** Workflow bricht mit Exit-Code 1 ab (rotes X).
+
+---
+
+### Lessons Learned
+
+| # | Fehler | Auswirkung | Lösung |
+|---|--------|------------|--------|
+| 1 | Secret gelöscht | Warnung im Log, kein Absturz | Secret neu anlegen |
+| 2 | Falscher Dateiname | Workflow bricht ab | Dateinamen prüfen |
+
+
