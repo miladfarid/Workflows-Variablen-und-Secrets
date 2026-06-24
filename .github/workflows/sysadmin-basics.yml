@@ -73,3 +73,9 @@ jobs:
           cat reports/system-report.txt
           echo "--- runtime-info.txt ---"
           cat reports/runtime-info.txt
+
+      - name: Artefakte hochladen
+        uses: actions/upload-artifact@v4
+        with:
+          name: workflow-reports
+          path: reports/
