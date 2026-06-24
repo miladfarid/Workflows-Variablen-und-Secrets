@@ -74,6 +74,30 @@ jobs:
           echo "--- runtime-info.txt ---"
           cat reports/runtime-info.txt
 
+      - name: Secrets pruefen
+        env:
+          API_TOKEN: ${{ secrets.CLOUD_API_TOKEN }}
+          SSH_HOST: ${{ secrets.SSH_TARGET }}
+        run: |
+          echo "=== Secret-Pruefung ==="
+
+          if [ -n "$API_TOKEN" ]; then
+            echo "CLOUD_API_TOKEN : vorhanden ✅"
+          else
+            echo "CLOUD_API_TOKEN : fehlt ❌"
+          fi
+
+          if [ -n "$SSH_HOST" ]; then
+            echo "SSH_TARGET      : vorhanden ✅"
+          else
+            echo "SSH_TARGET      : fehlt ❌"
+          fi
+
+          echo "=== Simulation: Verbindung wird aufgebaut ==="
+          echo "Verbinde mit Zielserver... (simuliert)"
+          echo "API-Authentifizierung... (simuliert)"
+          echo "Vorgang abgeschlossen."
+
       - name: Artefakte hochladen
         uses: actions/upload-artifact@v4
         with:
